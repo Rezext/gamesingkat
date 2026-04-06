@@ -5,40 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You 🤍</title>
     <style>
-        body { margin: 0; font-family: sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow-x: hidden; }
+        /* Tambahan background blur biar ga kosong */
+        body { 
+            margin: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow-x: hidden;
+            background-image: url('cover-lagu.jpg'); /* Pastikan nama file sama */
+            background-size: cover; background-position: center; background-attachment: fixed;
+            backdrop-filter: blur(30px) brightness(0.2); -webkit-backdrop-filter: blur(30px) brightness(0.2);
+        }
         
-        /* Layout Responsif */
-        .section { display: none; width: 90%; max-width: 800px; padding: 20px; animation: fadeIn 1s; box-sizing: border-box; }
+        .section { display: none; width: 95%; max-width: 900px; padding: 20px; animation: fadeIn 1s; box-sizing: border-box; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Spotify Step */
-        .spotify-card { background: linear-gradient(180deg, #5b2d2d 0%, #121212 100%); padding: 40px 20px; border-radius: 10px; width: 100%; max-width: 600px; margin: 0 auto; }
-        .cover { width: 100%; max-width: 300px; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .play-btn { background: #1DB954; color: black; border: none; border-radius: 50px; padding: 12px 40px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; transition: 0.2s; }
+        /* Spotify Step - Dibuat Flexbox */
+        .spotify-card { background: linear-gradient(180deg, rgba(91,45,45,0.8) 0%, rgba(18,18,18,0.95) 100%); padding: 40px; border-radius: 15px; display: flex; flex-direction: column; gap: 30px; align-items: center; box-shadow: 0 15px 30px rgba(0,0,0,0.7); }
+        .spotify-left { width: 100%; max-width: 350px; }
+        .spotify-right { width: 100%; display: flex; flex-direction: column; justify-content: center; }
+        
+        .cover { width: 100%; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+        .play-btn { background: #1DB954; color: black; border: none; border-radius: 50px; padding: 15px 40px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; transition: 0.2s; width: 100%; max-width: 200px; }
         .play-btn:hover { transform: scale(1.05); }
         
         /* Efek Lirik Spotify */
-        .lyrics-box { margin: 20px auto 0; height: 180px; max-width: 500px; overflow: hidden; position: relative; text-align: left; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; }
-        .lyrics-text { position: absolute; top: 100%; width: 90%; font-size: 16px; line-height: 2; font-weight: bold; color: #b3b3b3; }
-        .lyrics-text span { color: white; font-size: 18px; }
+        .lyrics-box { height: 250px; overflow: hidden; position: relative; text-align: left; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 10px; width: 100%; box-sizing: border-box;}
+        .lyrics-text { position: absolute; top: 100%; width: 90%; font-size: 18px; line-height: 2.2; font-weight: bold; color: #b3b3b3; }
+        .lyrics-text span { color: white; font-size: 22px; }
         @keyframes scrollUp { 0% { top: 100%; } 100% { top: -150%; } }
         .running { animation: scrollUp 20s linear forwards; }
 
-        /* Quiz Step */
-        .quiz-container { background: #1e1e1e; padding: 30px; border-radius: 10px; text-align: left; max-width: 600px; margin: 0 auto; }
-        .likert { display: flex; justify-content: space-between; margin: 20px 0; font-size: 14px; flex-wrap: wrap; gap: 10px; }
-        .btn-submit { background: #fff; color: #000; border: none; padding: 12px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 500px; margin: 15px auto 0; display: block; transition: 0.2s;}
-        .btn-submit:hover { background: #e0e0e0; }
+        /* Kuis & Umum */
+        .quiz-container { background: rgba(30,30,30,0.9); padding: 40px; border-radius: 15px; text-align: left; max-width: 700px; margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5);}
+        .likert { display: flex; justify-content: space-between; margin: 25px 0; font-size: 14px; flex-wrap: wrap; gap: 10px; }
+        .btn-submit { background: #fff; color: #000; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; margin: 20px auto 0; display: block; transition: 0.2s; font-size: 16px;}
+        .btn-submit:hover { background: #e0e0e0; transform: scale(1.05); }
         
         /* Captcha Step */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 20px auto 0; max-width: 450px; }
-        .grid img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.2s; border-radius: 5px;}
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 30px auto 0; max-width: 500px; }
+        .grid img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.2s; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
         .grid img.selected { opacity: 1; border: 4px solid #1DB954; transform: scale(0.95); }
         
         /* Video Step */
-        video { width: 100%; max-width: 600px; border-radius: 10px; margin-top: 15px; display: block; margin-left: auto; margin-right: auto; }
+        video { width: 100%; max-width: 700px; border-radius: 15px; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.6);}
         .hidden { display: none !important; }
+
+        /* Media Query buat Laptop (Layar disampingin) */
+        @media (min-width: 768px) {
+            .spotify-card { flex-direction: row; text-align: left; align-items: stretch; }
+            .spotify-left { text-align: center; }
+            .lyrics-box { height: 100%; min-height: 350px; }
+        }
     </style>
 </head>
 <body>
@@ -47,34 +62,35 @@
 
     <div id="step1" class="section active">
         <div class="spotify-card">
-            <img src="cover-lagu.jpg" class="cover" alt="Risk it All">
-            <h2 style="margin: 20px 0 5px; font-size: 28px;">Risk it All</h2>
-            <p style="margin: 0; color: #b3b3b3; font-size: 16px;">Bruno Mars</p>
-            <audio id="bg-music" src="risk-it-all.mp3"></audio>
-            
-            <button id="playBtn" class="play-btn" onclick="startSpotify()">▶ Play</button>
-
-            <div class="lyrics-box">
-                <div class="lyrics-text" id="lyricText">
-                    Hai Diana...<br>
-                    Mungkin ini agak random,<br>
-                    Tapi ada yang pengen aku sampein.<br>
-                    <span>Kamu itu spesial banget buat aku.</span><br>
-                    Dengerin lagu ini yaaa,<br>
-                    Terus selesain game kecil di bawah.<br>
-                    I have something to tell you! 🤍
-                </div>
+            <div class="spotify-left">
+                <img src="cover-lagu.jpg" class="cover" alt="Risk it All">
+                <h2 style="margin: 25px 0 5px; font-size: 32px;">Risk it All</h2>
+                <p style="margin: 0; color: #b3b3b3; font-size: 18px;">Bruno Mars</p>
+                <button id="playBtn" class="play-btn" onclick="startSpotify()">▶ Play</button>
             </div>
-
-            <button id="nextQuizBtn" class="btn-submit hidden" onclick="nextStep(1, 2)">Lanjut Kuis ✨</button>
+            
+            <div class="spotify-right">
+                <div class="lyrics-box">
+                    <div class="lyrics-text" id="lyricText">
+                        Hai Diana...<br>
+                        Mungkin ini agak random,<br>
+                        Tapi ada yang pengen aku sampein.<br>
+                        <span>Kamu itu spesial banget buat aku.</span><br>
+                        Dengerin lagu ini yaaa,<br>
+                        Terus selesain game kecil di bawah.<br>
+                        I have something to tell you! 🤍
+                    </div>
+                </div>
+                <button id="nextQuizBtn" class="btn-submit hidden" onclick="nextStep(1, 2)">Lanjut Kuis ✨</button>
+            </div>
         </div>
     </div>
 
     <div id="step2" class="section">
         <div class="quiz-container">
-            <h3 style="font-size: 22px; margin-top: 0;">Kuis Kepribadian Singkat ✨</h3>
+            <h3 style="font-size: 26px; margin-top: 0; text-align: center;">Kuis Kepribadian Singkat ✨</h3>
             <form action="LINK_GOOGLE_FORM_DISINI" method="POST" target="hidden_iframe" id="quizForm">
-                <p style="font-size: 16px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
+                <p style="font-size: 18px; margin-top: 30px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
                 <div class="likert">
                     <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Tidak Setuju"> 1</label>
                     <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Tidak Setuju"> 2</label>
@@ -84,41 +100,45 @@
                 </div>
                 <button type="button" class="btn-submit" onclick="submitQuiz()">Cek Hasil</button>
             </form>
-            <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 20px; font-size: 24px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
+            <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 30px; font-size: 28px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
         </div>
     </div>
 
     <div id="step3" class="section">
-        <h2 style="font-size: 26px;">Pilih semua hal yang bikin aku bahagia</h2>
-        <p style="color: #b3b3b3; font-size: 16px;">Hint: Si Cantik 👀</p>
-        <div class="grid" id="captchaGrid">
-            <img src="random1.jpg" onclick="toggleSelect(this, 0)">
-            <img src="diana1.jpg" onclick="toggleSelect(this, 1)">
-            <img src="random2.jpg" onclick="toggleSelect(this, 0)">
-            <img src="random3.jpg" onclick="toggleSelect(this, 0)">
-            <img src="diana2.jpg" onclick="toggleSelect(this, 1)">
-            <img src="random4.jpg" onclick="toggleSelect(this, 0)">
-            <img src="diana3.jpg" onclick="toggleSelect(this, 1)">
-            <img src="random5.jpg" onclick="toggleSelect(this, 0)">
-            <img src="random6.jpg" onclick="toggleSelect(this, 0)">
+        <div style="background: rgba(30,30,30,0.9); padding: 40px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.5);">
+            <h2 style="font-size: 30px; margin-top: 0;">Pilih semua hal yang bikin aku bahagia</h2>
+            <p style="color: #b3b3b3; font-size: 18px;">Hint: Si Cantik 👀</p>
+            <div class="grid" id="captchaGrid">
+                <img src="random1.jpg" onclick="toggleSelect(this, 0)">
+                <img src="diana1.jpg" onclick="toggleSelect(this, 1)">
+                <img src="random2.jpg" onclick="toggleSelect(this, 0)">
+                <img src="random3.jpg" onclick="toggleSelect(this, 0)">
+                <img src="diana2.jpg" onclick="toggleSelect(this, 1)">
+                <img src="random4.jpg" onclick="toggleSelect(this, 0)">
+                <img src="diana3.jpg" onclick="toggleSelect(this, 1)">
+                <img src="random5.jpg" onclick="toggleSelect(this, 0)">
+                <img src="random6.jpg" onclick="toggleSelect(this, 0)">
+            </div>
         </div>
     </div>
 
     <div id="step4" class="section">
-        <h2 style="font-size: 26px;">Special For You 💌</h2>
+        <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Special For You 💌</h2>
         <video id="confessVideo" controls>
             <source src="video-confess.mp4" type="video/mp4">
         </video>
         <br>
-        <button id="btnBts" class="play-btn hidden" onclick="showBts()" style="width: 100%; max-width: 600px;">Lihat Behind The Scene 🎬</button>
+        <button id="btnBts" class="btn-submit hidden" onclick="showBts()" style="max-width: 400px;">Lihat Behind The Scene 🎬</button>
     </div>
 
     <div id="step5" class="section">
-        <h2 style="font-size: 26px;">Behind The Scene 🛠️</h2>
+        <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Behind The Scene 🛠️</h2>
         <video id="btsVideo" controls>
             <source src="video-bts.mp4" type="video/mp4">
         </video>
     </div>
+
+    <audio id="bg-music" src="risk-it-all.mp3"></audio>
 
     <script>
         let music = document.getElementById("bg-music");
