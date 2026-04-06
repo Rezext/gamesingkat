@@ -12,7 +12,8 @@
             background-image: url('bg-awal.jpg'); 
             background-size: cover; background-position: center;
             filter: blur(25px) brightness(0.3);
-            transform: scale(1.1); 
+            transform: scale(1.1) translateZ(0); /* Hardware acceleration biar enteng */
+            will-change: transform, filter;
         }
 
         .main-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; width: 100%; padding: 20px; box-sizing: border-box; }
@@ -48,7 +49,8 @@
         .grid img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.2s; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
         .grid img.selected { opacity: 1; border: 4px solid #1DB954; transform: scale(0.95); }
         
-        iframe { width: 100%; height: 400px; max-width: 700px; border-radius: 15px; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.6); border: none; }
+        /* Iframe disetting responsive dengan aspect-ratio biar pas di HP */
+        iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; max-width: 700px; border-radius: 15px; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.6); border: none; }
         .hidden { display: none !important; }
 
         @media (min-width: 768px) {
@@ -224,9 +226,9 @@
             document.getElementById(`step${next}`).classList.add('active');
         }
 
-        window.submitQuiz = async function() {
+        window.submitQuiz = function() {
             const btn = document.querySelector(".btn-submit");
-            btn.innerText = "Loading...";
+            btn.innerText = "Memproses...";
 
             const q1 = document.querySelector('input[name="q1"]:checked').value;
             const q2 = document.querySelector('input[name="q2"]:checked').value;
@@ -234,25 +236,22 @@
             const q4 = document.querySelector('input[name="q4"]:checked').value;
             const q5 = document.querySelector('input[name="q5"]:checked').value;
 
-            try {
-                await addDoc(collection(db, "jawaban_kuis"), {
-                    timestamp: new Date(),
-                    jawaban_1: q1,
-                    jawaban_2: q2,
-                    jawaban_3: q3,
-                    jawaban_4: q4,
-                    jawaban_5: q5
-                });
+            // Tampilkan UI langsung biar gak nunggu database ngeload
+            document.getElementById("quizForm").style.display = "none";
+            document.getElementById("quizResult").classList.remove("hidden");
+            
+            // Jeda dicepetin jadi 2 detik aja
+            setTimeout(() => { window.nextStep(2, 3); }, 2000);
 
-                document.getElementById("quizForm").style.display = "none";
-                document.getElementById("quizResult").classList.remove("hidden");
-                
-                setTimeout(() => { window.nextStep(2, 3); }, 3000);
-            } catch (e) {
-                console.error("Error nambah dokumen: ", e);
-                alert("Gagal kirim! Coba lagi yaaa.");
-                btn.innerText = "Cek Hasil";
-            }
+            // Simpan ke Firebase di background aja (async tanpa memblokir UI)
+            addDoc(collection(db, "jawaban_kuis"), {
+                timestamp: new Date(),
+                jawaban_1: q1,
+                jawaban_2: q2,
+                jawaban_3: q3,
+                jawaban_4: q4,
+                jawaban_5: q5
+            }).catch(e => console.error("Error nambah dokumen: ", e));
         }
 
         window.correctSelected = 0;
@@ -277,7 +276,6 @@
 
         window.showBts = function() {
             window.nextStep(4, 5);
-            // Trik buat auto pause/stop video di iframe Google Drive
             var iframe = document.getElementById("confessVideo");
             if(iframe) {
                 iframe.src = iframe.src;
