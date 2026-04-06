@@ -7,22 +7,19 @@
     <style>
         body { margin: 0; font-family: sans-serif; color: white; overflow-x: hidden; min-height: 100vh; }
         
-        /* Layer Background Khusus Biar Blurnya Sempurna */
         .bg-blur {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background-image: url('bg-awal.jpg'); /* GANTI NAMA FILE BACKGROUND DI SINI */
+            background-image: url('bg-awal.jpg'); 
             background-size: cover; background-position: center;
             filter: blur(25px) brightness(0.3);
-            transform: scale(1.1); /* Biar pinggirannya nggak ada sisa putih */
+            transform: scale(1.1); 
         }
 
         .main-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; width: 100%; padding: 20px; box-sizing: border-box; }
-        
         .section { display: none; width: 100%; max-width: 900px; animation: fadeIn 1s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Spotify Step */
         .spotify-card { background: linear-gradient(180deg, rgba(91,45,45,0.8) 0%, rgba(18,18,18,0.95) 100%); padding: 40px; border-radius: 15px; display: flex; flex-direction: column; gap: 30px; align-items: center; box-shadow: 0 15px 30px rgba(0,0,0,0.7); }
         .spotify-left { width: 100%; max-width: 350px; }
         .spotify-right { width: 100%; display: flex; flex-direction: column; justify-content: center; }
@@ -31,29 +28,24 @@
         .play-btn { background: #1DB954; color: black; border: none; border-radius: 50px; padding: 15px 40px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; transition: 0.2s; width: 100%; max-width: 200px; }
         .play-btn:hover { transform: scale(1.05); }
         
-        /* Efek Lirik Spotify */
         .lyrics-box { height: 250px; overflow: hidden; position: relative; text-align: left; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 10px; width: 100%; box-sizing: border-box;}
         .lyrics-text { position: absolute; top: 100%; width: 90%; font-size: 18px; line-height: 2.2; font-weight: bold; color: #b3b3b3; }
         .lyrics-text span { color: white; font-size: 22px; }
         @keyframes scrollUp { 0% { top: 100%; } 100% { top: -150%; } }
         .running { animation: scrollUp 20s linear forwards; }
 
-        /* Kuis & Umum */
         .quiz-container { background: rgba(30,30,30,0.9); padding: 40px; border-radius: 15px; text-align: left; max-width: 700px; margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5);}
         .likert { display: flex; justify-content: space-between; margin: 25px 0; font-size: 14px; flex-wrap: wrap; gap: 10px; }
         .btn-submit { background: #fff; color: #000; border: none; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; margin: 20px auto 0; display: block; transition: 0.2s; font-size: 16px;}
         .btn-submit:hover { background: #e0e0e0; transform: scale(1.05); }
         
-        /* Captcha Step */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 30px auto 0; max-width: 500px; }
         .grid img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.2s; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
         .grid img.selected { opacity: 1; border: 4px solid #1DB954; transform: scale(0.95); }
         
-        /* Video Step */
         video { width: 100%; max-width: 700px; border-radius: 15px; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.6);}
         .hidden { display: none !important; }
 
-        /* Media Query buat Laptop */
         @media (min-width: 768px) {
             .spotify-card { flex-direction: row; text-align: left; align-items: stretch; }
             .spotify-left { text-align: center; }
@@ -64,8 +56,6 @@
 <body>
 
     <div class="bg-blur"></div>
-
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
     <div class="main-container">
         <div id="step1" class="section active">
@@ -95,17 +85,55 @@
         </div>
 
         <div id="step2" class="section">
-            <div class="quiz-container">
+            <div class="quiz-container" style="max-height: 80vh; overflow-y: auto;">
                 <h3 style="font-size: 26px; margin-top: 0; text-align: center;">Kuis Kepribadian Singkat ✨</h3>
-                <form action="https://forms.gle/CfBKQy6vh5Ym9rR29" method="POST" target="hidden_iframe" id="quizForm">
-                    <p style="font-size: 18px; margin-top: 30px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
+                
+                <form id="quizForm">
+                    <p style="font-size: 16px; margin-top: 20px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
                     <div class="likert">
-                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Tidak Setuju"> 1</label>
-                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Tidak Setuju"> 2</label>
-                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Netral" checked> 3</label>
-                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Setuju"> 4</label>
-                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Setuju"> 5</label>
+                        <label><input type="radio" name="q1" value="1"> 1</label>
+                        <label><input type="radio" name="q1" value="2"> 2</label>
+                        <label><input type="radio" name="q1" value="3" checked> 3</label>
+                        <label><input type="radio" name="q1" value="4"> 4</label>
+                        <label><input type="radio" name="q1" value="5"> 5</label>
                     </div>
+
+                    <p style="font-size: 16px; margin-top: 20px;">2. Pertanyaan dua kamu di sini?</p>
+                    <div class="likert">
+                        <label><input type="radio" name="q2" value="1"> 1</label>
+                        <label><input type="radio" name="q2" value="2"> 2</label>
+                        <label><input type="radio" name="q2" value="3" checked> 3</label>
+                        <label><input type="radio" name="q2" value="4"> 4</label>
+                        <label><input type="radio" name="q2" value="5"> 5</label>
+                    </div>
+
+                    <p style="font-size: 16px; margin-top: 20px;">3. Pertanyaan tiga kamu di sini?</p>
+                    <div class="likert">
+                        <label><input type="radio" name="q3" value="1"> 1</label>
+                        <label><input type="radio" name="q3" value="2"> 2</label>
+                        <label><input type="radio" name="q3" value="3" checked> 3</label>
+                        <label><input type="radio" name="q3" value="4"> 4</label>
+                        <label><input type="radio" name="q3" value="5"> 5</label>
+                    </div>
+
+                    <p style="font-size: 16px; margin-top: 20px;">4. Pertanyaan empat kamu di sini?</p>
+                    <div class="likert">
+                        <label><input type="radio" name="q4" value="1"> 1</label>
+                        <label><input type="radio" name="q4" value="2"> 2</label>
+                        <label><input type="radio" name="q4" value="3" checked> 3</label>
+                        <label><input type="radio" name="q4" value="4"> 4</label>
+                        <label><input type="radio" name="q4" value="5"> 5</label>
+                    </div>
+
+                    <p style="font-size: 16px; margin-top: 20px;">5. Pertanyaan lima kamu di sini?</p>
+                    <div class="likert">
+                        <label><input type="radio" name="q5" value="1"> 1</label>
+                        <label><input type="radio" name="q5" value="2"> 2</label>
+                        <label><input type="radio" name="q5" value="3" checked> 3</label>
+                        <label><input type="radio" name="q5" value="4"> 4</label>
+                        <label><input type="radio" name="q5" value="5"> 5</label>
+                    </div>
+
                     <button type="button" class="btn-submit" onclick="submitQuiz()">Cek Hasil</button>
                 </form>
                 <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 30px; font-size: 28px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
@@ -149,45 +177,88 @@
 
     <audio id="bg-music" src="risk-it-all.mp3"></audio>
 
-    <script>
-        let music = document.getElementById("bg-music");
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        function startSpotify() {
-            music.play();
+        // Config dari kamu
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ3UVv-U4AH67rIdNIcHvcQHRWhpkyXQ0",
+            authDomain: "to-do-list-keren-97cc1.firebaseapp.com",
+            projectId: "to-do-list-keren-97cc1",
+            storageBucket: "to-do-list-keren-97cc1.firebasestorage.app",
+            messagingSenderId: "1098588654289",
+            appId: "1:1098588654289:web:7c77a4671b0e16567053f0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Deklarasi Global Function biar bisa dipanggil dari HTML
+        window.music = document.getElementById("bg-music");
+
+        window.startSpotify = function() {
+            window.music.play();
             document.getElementById("lyricText").classList.add("running");
             document.getElementById("playBtn").classList.add("hidden"); 
             document.getElementById("nextQuizBtn").classList.remove("hidden"); 
         }
 
-        function nextStep(current, next) {
+        window.nextStep = function(current, next) {
             document.getElementById(`step${current}`).classList.remove('active');
             document.getElementById(`step${next}`).classList.add('active');
         }
 
-        function submitQuiz() {
-            document.getElementById("quizForm").submit(); 
-            document.getElementById("quizForm").style.display = "none";
-            document.getElementById("quizResult").classList.remove("hidden");
-            
-            setTimeout(() => { nextStep(2, 3); }, 3000);
+        // FUNGSI FIREBASE
+        window.submitQuiz = async function() {
+            const btn = document.querySelector(".btn-submit");
+            btn.innerText = "Loading...";
+
+            const q1 = document.querySelector('input[name="q1"]:checked').value;
+            const q2 = document.querySelector('input[name="q2"]:checked').value;
+            const q3 = document.querySelector('input[name="q3"]:checked').value;
+            const q4 = document.querySelector('input[name="q4"]:checked').value;
+            const q5 = document.querySelector('input[name="q5"]:checked').value;
+
+            try {
+                // Masukin data ke database collection "jawaban_kuis"
+                await addDoc(collection(db, "jawaban_kuis"), {
+                    timestamp: new Date(),
+                    jawaban_1: q1,
+                    jawaban_2: q2,
+                    jawaban_3: q3,
+                    jawaban_4: q4,
+                    jawaban_5: q5
+                });
+
+                document.getElementById("quizForm").style.display = "none";
+                document.getElementById("quizResult").classList.remove("hidden");
+                
+                setTimeout(() => { window.nextStep(2, 3); }, 3000);
+            } catch (e) {
+                console.error("Error nambah dokumen: ", e);
+                alert("Gagal kirim! Coba lagi yaaa.");
+                btn.innerText = "Cek Hasil";
+            }
         }
 
-        let correctSelected = 0;
-        let wrongSelected = 0;
+        // Logika Captcha
+        window.correctSelected = 0;
+        window.wrongSelected = 0;
 
-        function toggleSelect(img, isTarget) {
+        window.toggleSelect = function(img, isTarget) {
             if (img.classList.contains("selected")) {
                 img.classList.remove("selected");
-                isTarget ? correctSelected-- : wrongSelected--;
+                isTarget ? window.correctSelected-- : window.wrongSelected--;
             } else {
                 img.classList.add("selected");
-                isTarget ? correctSelected++ : wrongSelected++;
+                isTarget ? window.correctSelected++ : window.wrongSelected++;
             }
 
-            if (correctSelected === 3 && wrongSelected === 0) {
+            if (window.correctSelected === 3 && window.wrongSelected === 0) {
                 setTimeout(() => {
-                    nextStep(3, 4);
-                    music.pause(); 
+                    window.nextStep(3, 4);
+                    window.music.pause(); 
                     document.getElementById("confessVideo").play(); 
                 }, 500);
             }
@@ -197,8 +268,8 @@
             document.getElementById("btnBts").classList.remove("hidden");
         };
 
-        function showBts() {
-            nextStep(4, 5);
+        window.showBts = function() {
+            window.nextStep(4, 5);
             document.getElementById("confessVideo").pause();
             document.getElementById("btsVideo").play();
         }
