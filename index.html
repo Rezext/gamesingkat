@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You 🤍</title>
+    <style>
+        body { margin: 0; font-family: sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow: hidden; }
+        .section { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 1s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Spotify Step */
+        .spotify-card { background: linear-gradient(180deg, #5b2d2d 0%, #121212 100%); padding: 30px; border-radius: 10px; }
+        .cover { width: 100%; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .play-btn { background: #1DB954; color: black; border: none; border-radius: 50px; padding: 10px 30px; font-weight: bold; font-size: 14px; margin-top: 15px; cursor: pointer; }
+        
+        /* Efek Lirik Spotify */
+        .lyrics-box { margin-top: 20px; height: 150px; overflow: hidden; position: relative; text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; }
+        .lyrics-text { position: absolute; top: 100%; width: 90%; font-size: 16px; line-height: 2; font-weight: bold; color: #b3b3b3; }
+        .lyrics-text span { color: white; font-size: 18px; }
+        @keyframes scrollUp { 0% { top: 100%; } 100% { top: -150%; } }
+        .running { animation: scrollUp 20s linear forwards; }
+
+        /* Quiz Step */
+        .quiz-container { background: #1e1e1e; padding: 20px; border-radius: 10px; text-align: left; }
+        .likert { display: flex; justify-content: space-between; margin: 15px 0; font-size: 12px; }
+        .btn-submit { background: #fff; color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;}
+        
+        /* Captcha Step */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 20px; }
+        .grid img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; opacity: 0.6; transition: 0.2s; border-radius: 5px;}
+        .grid img.selected { opacity: 1; border: 3px solid #1DB954; }
+        
+        /* Video Step */
+        video { width: 100%; border-radius: 10px; margin-top: 15px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <div id="step1" class="section active spotify-card">
+        <img src="cover-lagu.jpg" class="cover" alt="Risk it All">
+        <h2 style="margin: 15px 0 5px;">Risk it All</h2>
+        <p style="margin: 0; color: #b3b3b3;">Bruno Mars</p>
+        <audio id="bg-music" src="risk-it-all.mp3"></audio>
+        
+        <button id="playBtn" class="play-btn" onclick="startSpotify()">▶ Play</button>
+
+        <div class="lyrics-box">
+            <div class="lyrics-text" id="lyricText">
+                Hai Diana...<br>
+                Mungkin ini agak random,<br>
+                Tapi ada yang pengen aku sampein.<br>
+                <span>Kamu itu spesial banget buat aku.</span><br>
+                Dengerin lagu ini yaaa,<br>
+                Terus selesain game kecil di bawah.<br>
+                I have something to tell you! 🤍
+            </div>
+        </div>
+
+        <button id="nextQuizBtn" class="btn-submit hidden" onclick="nextStep(1, 2)">Lanjut Kuis ✨</button>
+    </div>
+
+    <div id="step2" class="section">
+        <div class="quiz-container">
+            <h3>Kuis Kepribadian Singkat ✨</h3>
+            <form action="LINK_GOOGLE_FORM_DISINI" method="POST" target="hidden_iframe" id="quizForm">
+                <p>1. Seberapa setuju kamu kalau kita itu nyambung?</p>
+                <div class="likert">
+                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Tidak Setuju"> 1</label>
+                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Tidak Setuju"> 2</label>
+                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Netral" checked> 3</label>
+                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Setuju"> 4</label>
+                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Setuju"> 5</label>
+                </div>
+                <button type="button" class="btn-submit" onclick="submitQuiz()">Cek Hasil</button>
+            </form>
+            <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 20px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
+        </div>
+    </div>
+
+    <div id="step3" class="section">
+        <h2>Pilih semua hal yang bikin aku bahagia</h2>
+        <p style="color: #b3b3b3; font-size: 14px;">Hint: Si Cantik 👀</p>
+        <div class="grid" id="captchaGrid">
+            <img src="random1.jpg" onclick="toggleSelect(this, 0)">
+            <img src="diana1.jpg" onclick="toggleSelect(this, 1)">
+            <img src="random2.jpg" onclick="toggleSelect(this, 0)">
+            <img src="random3.jpg" onclick="toggleSelect(this, 0)">
+            <img src="diana2.jpg" onclick="toggleSelect(this, 1)">
+            <img src="random4.jpg" onclick="toggleSelect(this, 0)">
+            <img src="diana3.jpg" onclick="toggleSelect(this, 1)">
+            <img src="random5.jpg" onclick="toggleSelect(this, 0)">
+            <img src="random6.jpg" onclick="toggleSelect(this, 0)">
+        </div>
+    </div>
+
+    <div id="step4" class="section">
+        <h2>Special For You 💌</h2>
+        <video id="confessVideo" controls>
+            <source src="video-confess.mp4" type="video/mp4">
+        </video>
+        <br>
+        <button id="btnBts" class="play-btn hidden" onclick="showBts()" style="width: 100%;">Lihat Behind The Scene 🎬</button>
+    </div>
+
+    <div id="step5" class="section">
+        <h2>Behind The Scene 🛠️</h2>
+        <video id="btsVideo" controls>
+            <source src="video-bts.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <script>
+        let music = document.getElementById("bg-music");
+
+        // Fungsi khusus Spotify
+        function startSpotify() {
+            music.play();
+            document.getElementById("lyricText").classList.add("running");
+            document.getElementById("playBtn").classList.add("hidden"); // Sembunyiin tombol play
+            document.getElementById("nextQuizBtn").classList.remove("hidden"); // Munculin tombol lanjut
+        }
+
+        // Pindah step umum
+        function nextStep(current, next) {
+            document.getElementById(`step${current}`).classList.remove('active');
+            document.getElementById(`step${next}`).classList.add('active');
+        }
+
+        // Submit Kuis
+        function submitQuiz() {
+            document.getElementById("quizForm").submit(); 
+            document.getElementById("quizForm").style.display = "none";
+            document.getElementById("quizResult").classList.remove("hidden");
+            
+            setTimeout(() => { nextStep(2, 3); }, 3000);
+        }
+
+        // Logika Captcha
+        let correctSelected = 0;
+        let wrongSelected = 0;
+
+        function toggleSelect(img, isTarget) {
+            if (img.classList.contains("selected")) {
+                img.classList.remove("selected");
+                isTarget ? correctSelected-- : wrongSelected--;
+            } else {
+                img.classList.add("selected");
+                isTarget ? correctSelected++ : wrongSelected++;
+            }
+
+            if (correctSelected === 3 && wrongSelected === 0) {
+                setTimeout(() => {
+                    nextStep(3, 4);
+                    music.pause(); 
+                    document.getElementById("confessVideo").play(); 
+                }, 500);
+            }
+        }
+
+        // Video Confess Selesai
+        document.getElementById("confessVideo").onended = function() {
+            document.getElementById("btnBts").classList.remove("hidden");
+        };
+
+        // Buka BTS
+        function showBts() {
+            nextStep(4, 5);
+            document.getElementById("confessVideo").pause();
+            document.getElementById("btsVideo").play();
+        }
+    </script>
+</body>
+</html>
