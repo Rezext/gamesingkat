@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You 🤍</title>
     <style>
-        /* Tambahan background blur biar ga kosong */
-        body { 
-            margin: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; overflow-x: hidden;
-            background-image: url('cover-lagu.jpg'); /* Pastikan nama file sama */
-            background-size: cover; background-position: center; background-attachment: fixed;
-            backdrop-filter: blur(30px) brightness(0.2); -webkit-backdrop-filter: blur(30px) brightness(0.2);
-        }
+        body { margin: 0; font-family: sans-serif; color: white; overflow-x: hidden; min-height: 100vh; }
         
-        .section { display: none; width: 95%; max-width: 900px; padding: 20px; animation: fadeIn 1s; box-sizing: border-box; }
+        /* Layer Background Khusus Biar Blurnya Sempurna */
+        .bg-blur {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background-image: url('bg-awal.jpg'); /* GANTI NAMA FILE BACKGROUND DI SINI */
+            background-size: cover; background-position: center;
+            filter: blur(25px) brightness(0.3);
+            transform: scale(1.1); /* Biar pinggirannya nggak ada sisa putih */
+        }
+
+        .main-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; width: 100%; padding: 20px; box-sizing: border-box; }
+        
+        .section { display: none; width: 100%; max-width: 900px; animation: fadeIn 1s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Spotify Step - Dibuat Flexbox */
+        /* Spotify Step */
         .spotify-card { background: linear-gradient(180deg, rgba(91,45,45,0.8) 0%, rgba(18,18,18,0.95) 100%); padding: 40px; border-radius: 15px; display: flex; flex-direction: column; gap: 30px; align-items: center; box-shadow: 0 15px 30px rgba(0,0,0,0.7); }
         .spotify-left { width: 100%; max-width: 350px; }
         .spotify-right { width: 100%; display: flex; flex-direction: column; justify-content: center; }
@@ -48,7 +53,7 @@
         video { width: 100%; max-width: 700px; border-radius: 15px; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 15px 30px rgba(0,0,0,0.6);}
         .hidden { display: none !important; }
 
-        /* Media Query buat Laptop (Layar disampingin) */
+        /* Media Query buat Laptop */
         @media (min-width: 768px) {
             .spotify-card { flex-direction: row; text-align: left; align-items: stretch; }
             .spotify-left { text-align: center; }
@@ -58,84 +63,88 @@
 </head>
 <body>
 
+    <div class="bg-blur"></div>
+
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-    <div id="step1" class="section active">
-        <div class="spotify-card">
-            <div class="spotify-left">
-                <img src="cover-lagu.jpg" class="cover" alt="Risk it All">
-                <h2 style="margin: 25px 0 5px; font-size: 32px;">Risk it All</h2>
-                <p style="margin: 0; color: #b3b3b3; font-size: 18px;">Bruno Mars</p>
-                <button id="playBtn" class="play-btn" onclick="startSpotify()">▶ Play</button>
-            </div>
-            
-            <div class="spotify-right">
-                <div class="lyrics-box">
-                    <div class="lyrics-text" id="lyricText">
-                        Hai Diana...<br>
-                        Mungkin ini agak random,<br>
-                        Tapi ada yang pengen aku sampein.<br>
-                        <span>Kamu itu spesial banget buat aku.</span><br>
-                        Dengerin lagu ini yaaa,<br>
-                        Terus selesain game kecil di bawah.<br>
-                        I have something to tell you! 🤍
+    <div class="main-container">
+        <div id="step1" class="section active">
+            <div class="spotify-card">
+                <div class="spotify-left">
+                    <img src="cover-lagu.jpg" class="cover" alt="Risk it All">
+                    <h2 style="margin: 25px 0 5px; font-size: 32px;">Risk it All</h2>
+                    <p style="margin: 0; color: #b3b3b3; font-size: 18px;">Bruno Mars</p>
+                    <button id="playBtn" class="play-btn" onclick="startSpotify()">▶ Play</button>
+                </div>
+                
+                <div class="spotify-right">
+                    <div class="lyrics-box">
+                        <div class="lyrics-text" id="lyricText">
+                            Hai Diana...<br>
+                            Mungkin ini agak random,<br>
+                            Tapi ada yang pengen aku sampein.<br>
+                            <span>Kamu itu spesial banget buat aku.</span><br>
+                            Dengerin lagu ini yaaa,<br>
+                            Terus selesain game kecil di bawah.<br>
+                            I have something to tell you! 🤍
+                        </div>
                     </div>
+                    <button id="nextQuizBtn" class="btn-submit hidden" onclick="nextStep(1, 2)">Lanjut Kuis ✨</button>
                 </div>
-                <button id="nextQuizBtn" class="btn-submit hidden" onclick="nextStep(1, 2)">Lanjut Kuis ✨</button>
             </div>
         </div>
-    </div>
 
-    <div id="step2" class="section">
-        <div class="quiz-container">
-            <h3 style="font-size: 26px; margin-top: 0; text-align: center;">Kuis Kepribadian Singkat ✨</h3>
-            <form action="LINK_GOOGLE_FORM_DISINI" method="POST" target="hidden_iframe" id="quizForm">
-                <p style="font-size: 18px; margin-top: 30px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
-                <div class="likert">
-                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Tidak Setuju"> 1</label>
-                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Tidak Setuju"> 2</label>
-                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Netral" checked> 3</label>
-                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Setuju"> 4</label>
-                    <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Setuju"> 5</label>
-                </div>
-                <button type="button" class="btn-submit" onclick="submitQuiz()">Cek Hasil</button>
-            </form>
-            <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 30px; font-size: 28px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
-        </div>
-    </div>
-
-    <div id="step3" class="section">
-        <div style="background: rgba(30,30,30,0.9); padding: 40px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.5);">
-            <h2 style="font-size: 30px; margin-top: 0;">Pilih semua hal yang bikin aku bahagia</h2>
-            <p style="color: #b3b3b3; font-size: 18px;">Hint: Si Cantik 👀</p>
-            <div class="grid" id="captchaGrid">
-                <img src="random1.jpg" onclick="toggleSelect(this, 0)">
-                <img src="diana1.jpg" onclick="toggleSelect(this, 1)">
-                <img src="random2.jpg" onclick="toggleSelect(this, 0)">
-                <img src="random3.jpg" onclick="toggleSelect(this, 0)">
-                <img src="diana2.jpg" onclick="toggleSelect(this, 1)">
-                <img src="random4.jpg" onclick="toggleSelect(this, 0)">
-                <img src="diana3.jpg" onclick="toggleSelect(this, 1)">
-                <img src="random5.jpg" onclick="toggleSelect(this, 0)">
-                <img src="random6.jpg" onclick="toggleSelect(this, 0)">
+        <div id="step2" class="section">
+            <div class="quiz-container">
+                <h3 style="font-size: 26px; margin-top: 0; text-align: center;">Kuis Kepribadian Singkat ✨</h3>
+                <form action="LINK_GOOGLE_FORM_DISINI" method="POST" target="hidden_iframe" id="quizForm">
+                    <p style="font-size: 18px; margin-top: 30px;">1. Seberapa setuju kamu kalau kita itu nyambung?</p>
+                    <div class="likert">
+                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Tidak Setuju"> 1</label>
+                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Tidak Setuju"> 2</label>
+                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Netral" checked> 3</label>
+                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Setuju"> 4</label>
+                        <label><input type="radio" name="entry.ID_PERTANYAAN_1" value="Sangat Setuju"> 5</label>
+                    </div>
+                    <button type="button" class="btn-submit" onclick="submitQuiz()">Cek Hasil</button>
+                </form>
+                <h2 id="quizResult" class="hidden" style="color: #1DB954; text-align: center; margin-top: 30px; font-size: 28px;">Selamatttt, kepribadianmu 100% cocok banget sama akuu! 🎉</h2>
             </div>
         </div>
-    </div>
 
-    <div id="step4" class="section">
-        <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Special For You 💌</h2>
-        <video id="confessVideo" controls>
-            <source src="video-confess.mp4" type="video/mp4">
-        </video>
-        <br>
-        <button id="btnBts" class="btn-submit hidden" onclick="showBts()" style="max-width: 400px;">Lihat Behind The Scene 🎬</button>
-    </div>
+        <div id="step3" class="section">
+            <div style="background: rgba(30,30,30,0.9); padding: 40px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.5);">
+                <h2 style="font-size: 30px; margin-top: 0;">Pilih semua hal yang bikin aku bahagia</h2>
+                <p style="color: #b3b3b3; font-size: 18px;">Hint: Si Cantik 👀</p>
+                <div class="grid" id="captchaGrid">
+                    <img src="random1.jpg" onclick="toggleSelect(this, 0)">
+                    <img src="diana1.jpg" onclick="toggleSelect(this, 1)">
+                    <img src="random2.jpg" onclick="toggleSelect(this, 0)">
+                    <img src="random3.jpg" onclick="toggleSelect(this, 0)">
+                    <img src="diana2.jpg" onclick="toggleSelect(this, 1)">
+                    <img src="random4.jpg" onclick="toggleSelect(this, 0)">
+                    <img src="diana3.jpg" onclick="toggleSelect(this, 1)">
+                    <img src="random5.jpg" onclick="toggleSelect(this, 0)">
+                    <img src="random6.jpg" onclick="toggleSelect(this, 0)">
+                </div>
+            </div>
+        </div>
 
-    <div id="step5" class="section">
-        <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Behind The Scene 🛠️</h2>
-        <video id="btsVideo" controls>
-            <source src="video-bts.mp4" type="video/mp4">
-        </video>
+        <div id="step4" class="section">
+            <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Special For You 💌</h2>
+            <video id="confessVideo" controls>
+                <source src="video-confess.mp4" type="video/mp4">
+            </video>
+            <br>
+            <button id="btnBts" class="btn-submit hidden" onclick="showBts()">Lihat Behind The Scene 🎬</button>
+        </div>
+
+        <div id="step5" class="section">
+            <h2 style="font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Behind The Scene 🛠️</h2>
+            <video id="btsVideo" controls>
+                <source src="video-bts.mp4" type="video/mp4">
+            </video>
+        </div>
     </div>
 
     <audio id="bg-music" src="risk-it-all.mp3"></audio>
